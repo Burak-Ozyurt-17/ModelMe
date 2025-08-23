@@ -91,20 +91,19 @@ Setting up ModelMe locally is simple. The following steps assume that Python 3.9
      Prototype building – Developers can quickly test image classification ideas before moving to larger frameworks like TensorFlow or PyTorch.
      Creative use cases – Artists and designers can train models to recognize sketches, symbols, or even gestures.
 
-      ### Future Improvements
+     ### Future Improvements
      Improved dataset management with drag-and-drop upload.
      Support for additional model types beyond image classification.
      Real-time collaborative training sessions.
      Integration with cloud storage for saving and loading large datasets.
      A rating and feedback system for published models.
-      ### Contributing
+     ### Contributing
      Contributions are welcome! If you’d like to help improve ModelMe, you can fork the repository, create a new branch, and submit a pull request. Please ensure       your changes are well-documented and tested. For major changes, open an issue first to discuss what you would like to change.
-       ### Contact
-       For bugs, any other problems or further information you can contact me with: burakozyurt2010@gmail.com
-       ### Author
+     ### Contact
+     For bugs, any other problems or further information you can contact me with: burakozyurt2010@gmail.com
+     ### Author
+     - [@Burak Özyurt](https://www.github.com/Burak-Ozyurt-17)
 
-   - [@Burak Özyurt](https://www.github.com/Burak-Ozyurt-17)
-
-       ## License
-       This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+     ## License
+     This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
