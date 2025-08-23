@@ -41,22 +41,22 @@ Setting up ModelMe locally is simple. The following steps assume that Python 3.9
    ```bash
    python3 -m pip install --upgrade pip
    ```
-       Then install the required packages
-       ```bash
-       pip install -r requirements.txt
-       ```
-       And finally, you can run the project by simply following this  command in your project folder
+   Then install the required packages
+    ```bash
+    pip install -r requirements.txt
+    ```
+   And finally, you can run the project by simply following this  command in your project folder
 
-       ```bash
-       flask run
-       ```
-       ## Tech Stack
-       - [Flask](https://flask.palletsprojects.com/) – Backend
-       - [Tensorflow.js](https://www.tensorflow.org/js) – Model Training & Prediction
-       - [Bootstrap](https://getbootstrap.com) – Frontend Styling
-       - [SQLite3](https://sqlite.org/) – Database
+    ```bash
+    flask run
+    ```
+    ## Tech Stack
+    - [Flask](https://flask.palletsprojects.com/) – Backend
+    - [Tensorflow.js](https://www.tensorflow.org/js) – Model Training & Prediction
+    - [Bootstrap](https://getbootstrap.com) – Frontend Styling
+    - [SQLite3](https://sqlite.org/) – Database
 
-       ## Features
+    ## Features
 
     - Intuitive interface – A clean dashboard that allows anyone to manage projects without needing deep machine learning knowledge.
 
@@ -80,33 +80,30 @@ Setting up ModelMe locally is simple. The following steps assume that Python 3.9
 
 
      ### Inspiration
-       ModelMe is heavily inspired by Google’s Teachable Machine. While Teachable Machine makes training models extremely easy, it lacks a structured way to manage, publish, and collaborate on models. ModelMe fills this gap by combining simplicity with a more project-oriented approach.
+     ModelMe is heavily inspired by Google’s Teachable Machine. While Teachable Machine makes training models extremely easy, it lacks a structured way to              manage, publish, and collaborate on models. ModelMe fills this gap by combining simplicity with a more project-oriented approach.
 
-        The motivation behind this project was to create a tool that could serve as a learning platform for beginners while still being powerful enough for developers who want to experiment. By making the tool open-source, the project also encourages contributions and collaboration from the community.
+     The motivation behind this project was to create a tool that could serve as a learning platform for beginners while still being powerful enough for                developers who want to experiment. By making the tool open-source, the project also encourages contributions and collaboration from the community.
 
-    ### Usage Examples
-        Here are some example scenarios where ModelMe could be useful:
-        Educational projects – Students learning about neural networks can train a model on everyday objects using just their webcam.
-        Hobby experiments – Makers and tinkerers can build small AI-driven applications without needing a dedicated ML backend.
-        Prototype building – Developers can quickly test image classification ideas before moving to larger frameworks like TensorFlow or PyTorch.
-        Creative use cases – Artists and designers can train models to recognize sketches, symbols, or even gestures.
+     ### Usage Examples
+     Here are some example scenarios where ModelMe could be useful:
+     Educational projects – Students learning about neural networks can train a model on everyday objects using just their webcam.
+     Hobby experiments – Makers and tinkerers can build small AI-driven applications without needing a dedicated ML backend.
+     Prototype building – Developers can quickly test image classification ideas before moving to larger frameworks like TensorFlow or PyTorch.
+     Creative use cases – Artists and designers can train models to recognize sketches, symbols, or even gestures.
 
       ### Future Improvements
-        Improved dataset management with drag-and-drop upload.
-        Support for additional model types beyond image classification.
-        Real-time collaborative training sessions.
-        Integration with cloud storage for saving and loading large datasets.
-
-        A rating and feedback system for published models.
+     Improved dataset management with drag-and-drop upload.
+     Support for additional model types beyond image classification.
+     Real-time collaborative training sessions.
+     Integration with cloud storage for saving and loading large datasets.
+     A rating and feedback system for published models.
       ### Contributing
-
-        Contributions are welcome! If you’d like to help improve ModelMe, you can fork the repository, create a new branch, and submit a pull request. Please ensure your changes are well-documented and tested. For major changes, open an issue first to discuss what you would like to change.
+     Contributions are welcome! If you’d like to help improve ModelMe, you can fork the repository, create a new branch, and submit a pull request. Please ensure       your changes are well-documented and tested. For major changes, open an issue first to discuss what you would like to change.
        ### Contact
-
        For bugs, any other problems or further information you can contact me with: burakozyurt2010@gmail.com
        ### Author
 
-       - [@Burak Özyurt](https://www.github.com/Burak-Ozyurt-17)
+   - [@Burak Özyurt](https://www.github.com/Burak-Ozyurt-17)
 
        ## License
        This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
