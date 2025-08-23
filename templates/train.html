@@ -1,0 +1,253 @@
+{% extends "layout.html" %}
+{% block title_name %}Train Model{% endblock %}
+{% block main %}
+<div id="loading-screen" class="loading-screen">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading...</div>
+</div>
+<div class="container">
+    <div class="header-container">
+        <div class="header-button" id="reset" style="background-color: crimson;">Reset Model</div>
+        <div class="header-button" id="publish" style="background-color:#2c8a5f;">Publish Project</div>
+    </div>
+</div>
+<div id="training-container">
+    <div id="training-header">
+        <h1>Train Your Model</h1>
+        <p>Project: <strong>{{ model.title }}</strong></p>
+    </div><br>
+    <div id="scroll-container">
+        <div id="class-container">
+            {% for class in classes %}
+            <div class="training-class" id="{{ class.class_number }}">
+                <input autocomplete="off" class="class-name" name="class_name" type="text" placeholder="Class Name"
+                    value="{{ class.class_name }}" onblur="rename_class({{class.class_number}},this.value)">
+                <img class="rename-image" src="{{ url_for('static', filename='pen.png') }}" alt="Rename">
+                <span class="image-count" style="position:absolute; right: 20px; top:85px;">0 Images</span>
+                <hr>
+                <div class="image-upload-container">
+                    <span class="upload-title">Add Images:</span>
+                    <label class="file-upload">
+                        <img src="{{ url_for('static',filename='upload.png') }}">
+                        Hold to record
+                        <button class="dataCollector" data-onehot="{{class.class_number}}"
+                            data-name="{{ class.class_name}}"></button>
+                    </label>
+                </div>
+                <button class="delete-icon" onclick="delete_class({{class.class_number}})">
+                    <img class="normal" src="{{ url_for('static', filename='trash.png') }}" alt="Delete">
+                </button>
+                <br>
+                
+            </div>
+            {% endfor %}
+        </div>
+        <form action="/add_class/{{model_id}}" method="post">
+            <button class="add-class" type="submit">Add a class +</button>
+        </form>
+        
+    </div>
+
+    <div id="train-container" class="card">
+        <h5>Model Training</h5>
+        <div class="form-actions">
+            <button id="train-button" type="submit" class="btn btn-primary">Train Model</button>
+        </div>
+        <br>
+        <button type="button" id="toggle-advanced" class="advanced-btn" aria-expanded="false">
+            <span style="color:white">Advanced</span>
+            <svg class="arrow-icon" width="16" height="10" viewBox="0 0 16 10" fill="none">
+                <path fill="#9AA0A6" d="M1.41 0.59L0 2l8 8 8-8-1.41-1.41L8 7.17z"></path>
+            </svg>
+        </button>
+
+
+        <div class="advanced-options hidden" id="advanced-options">
+            <hr>
+            <div class="form-group">
+                <label for="epochs">Epochs</label>
+                <input id="epochs" name="epochs" type="number" value="10" min="1" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="batch-size">Batch Size</label>
+                <input id="batch-size" name="batch-size" type="number" value="32" min="1" autocomplete="off">
+            </div>
+        </div>
+    </div>
+
+    <div id="results-container">
+        <h5>Test Your Model</h5>
+        <div id="results-content">
+            <hr>
+            <span id="train-status"></span>
+            <h5 id="train-title">Camera Preview</h5>
+            <video id="webcam" autoplay muted style="width:100%;height:auto"></video>
+        </div>
+
+        <div class="output-container">
+            <div id="prediction-container"></div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal-overlay fade-in" id="publish-filter" style="display:none;"></div>
+<div class="modal-card fade-in" id="publish-card" style="display:none;">
+    <div class="modal-close" id="close-new">⛌</div>
+    <h2>Publish Project</h2>
+    <a>Please fill the gaps below</a>
+    <form action="/publish/{{ model_id }}" method="post"><br>
+        <input id="publishname" autocomplete="off" type="text" name="projectname" placeholder="Project name" required
+            class="form-control">
+        <input id="description" autocomplete="off" type="text" name="description" placeholder="Description" required
+            class="form-control">
+        <select id="category" name="category" required class="form-select form-select-md">
+            <option selected disabled>Category</option>
+            {% for category in categories %}
+            <option value="{{category}}">{{category}}</option>
+            {% endfor %}
+        </select><br>
+        <button type="submit" class="btn btn-success">Publish Project</button>
+    </form>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js" type="text/javascript"></script>
+<script type="module" src="/static/train.js"></script>
+<script>
+    window.modelId = "{{model_id}}"
+    document.getElementById('publish').addEventListener('click', () => {
+        document.getElementById('publish-card').style.display = 'block';
+        document.getElementById('publish-filter').style.display = 'block';
+    });
+
+    document.getElementById('close-new').addEventListener('click', () => {
+        document.getElementById('publish-card').style.display = 'none';
+        document.getElementById('publish-filter').style.display = 'none';
+    });
+    document.getElementById('publish-filter').addEventListener('click', () => {
+        document.getElementById('publish-card').style.display = 'none';
+        document.getElementById('publish-filter').style.display = 'none';
+    });
+    document.getElementById('toggle-advanced').addEventListener('click', () => {
+        const advancedOptions = document.getElementById('advanced-options');
+        const toggleBtn = document.getElementById('toggle-advanced');
+        advancedOptions.classList.toggle('hidden');
+        const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+        toggleBtn.setAttribute('aria-expanded', String(!expanded));
+        toggleBtn.classList.toggle('open');
+    });
+    document.getElementsByClassName('add-class')[0].addEventListener('click', (event) => {
+        event.preventDefault();
+        fetch("/add_class/{{model_id}}", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ class_name: "class_name" }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                let class_number = (data.class_number);
+                let class_name = (data.class_name);
+                const training_class = document.getElementsByClassName("training-class")[0];
+                const new_class = training_class.cloneNode(true);
+                new_class.dataset.classNumber = data.class_number;
+                new_class.id = data.class_number.toString();
+                new_class.querySelector(".class-name").value = data.class_name;
+                new_class.querySelector(".delete-icon").setAttribute(
+                    "onclick",
+                    `delete_class(${data.class_number})`
+                );
+                new_class.querySelector(".class-name").setAttribute(
+                    "onblur",
+                    `rename_class(${data.class_number}, this.value)`
+                );
+                new_class.querySelector(".image-count").innerHTML = "0 Images";
+                new_class.querySelector(".dataCollector").dataset.onehot = (class_number).toString();
+                new_class.querySelector(".dataCollector").dataset.name = data.class_name;
+                const newDataCollector = new_class.querySelector(".dataCollector");
+                newDataCollector.addEventListener('mousedown', window.gatherDataForClass);
+                newDataCollector.addEventListener('mouseup', window.gatherDataForClass);
+                window.CLASS_NAMES.push(data.class_name);
+                window.rebuildModel();
+                document.getElementById("class-container").appendChild(new_class);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Request failed");
+            });
+    });
+    function delete_class(class_number_from_function) {
+        fetch(`/delete_class/{{model_id}}/${class_number_from_function}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({}),
+        })
+            .then(response => response.json())
+            .then(data => {
+                const classNumber = data.class_number;
+                const classIndex = classNumber - 1;
+                
+                const training_classes = document.getElementsByClassName("training-class");
+                for (let i = 0; i < training_classes.length; i++) {
+                    if (training_classes[i].id == classNumber && training_classes.length != 1) {
+                        training_classes[i].remove();
+                        break;
+                    }
+                }
+                for (let i = CLASS_NAMES.length - 1; i >= 0; i--) {
+                    if (CLASS_NAMES[i] === classIndex) {
+                        CLASS_NAMES[i].dispose(); 
+                        CLASS_NAMES.splice(i, 1);
+                        CLASS_NAMES.splice(i, 1);
+                    }
+                }
+                for (let i = 0; i < CLASS_NAMES.length; i++) {
+                    if (CLASS_NAMES[i] > classIndex) {
+                        CLASS_NAMES[i]--; 
+                    }
+                }
+                window.CLASS_NAMES.splice(classIndex, 1);
+                window.rebuildModel();
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Request failed");
+        });
+};
+
+
+    function rename_class(class_number_ff, class_name_ff) {
+        fetch(`/rename_class/{{model_id}}/${class_number_ff}/${class_name_ff}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ class_name: "class_name" }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                const classNumber = data.class_number.toString();
+                const className = data.class_name;
+                const training_classes = document.getElementsByClassName("training-class");
+                for (let i = 0; i < training_classes.length; i++) {
+                    if (training_classes[i].id === classNumber) {
+                        let oldName = training_classes[i].querySelector("input").getAttribute('data-name');
+                        const classIndex = parseInt(classNumber) - 1;
+                        if (classIndex >= 0 && classIndex < window.CLASS_NAMES.length) {
+                            window.CLASS_NAMES[classIndex] = className;
+                        }
+                        training_classes[i].querySelector(".dataCollector").setAttribute('data-name', className);
+                        training_classes[i].querySelector("input").value = className;
+                        window.rebuildModel();
+                        break;
+                    }
+                }
+
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Request failed");
+            });
+    };
+</script>
+{% endblock %}

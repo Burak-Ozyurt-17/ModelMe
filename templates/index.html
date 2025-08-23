@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% block title_name %}Homepage{% endblock %}
+{% block main %}
+<br>
+<div id="homepage">
+    <a style="position:relative;left:20px;font-family: 'Boldonse'; system-ui;font-size:85px;">Explore the  </a><br><a style="position:absolute;left:20px;margin-top:25px;font-family: 'Boldonse'; system-ui;font-size:60px;">World's Open AI</a><br><a style="position:absolute;left:20px;margin-top:100px;font-family: 'Boldonse'; system-ui;font-size:60px;">Models</a>
+    <a style="font-size:25px;position:absolute;top:500px;left:20px;text-decoration:none;"href="/register">Sign up for Free</a>
+    <a style="font-size:25px;color:#f8f9fa;text-decoration:none;position:absolute;top:500px;left:230px;" href="#learnmore">Learn More🡫</a>
+    <p style="position:absolute;top:450px;left:20px;font-size: 20px; color: #ccc;">
+    Train, publish, and remix AI models
+    </p>
+    <img id="gif"src="/static/ai.gif" alt ="Artificial Neurons">
+</div>
+<div id="learnmore" style="
+    position: absolute;
+    top: 750px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 1525px;
+    padding: 40px;
+    color: black;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f3f4f4;
+    width:1525px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+">
+
+    <h2 style="font-size: 36px; margin-bottom: 40px; text-align: center;">
+        Learn More
+    </h2>
+
+    <div style="
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 40px;
+    ">
+
+        <!-- Paragraph 1 -->
+        <div style="flex: 0 1 380px;">
+            <h3 style="font-size: 24px; margin-bottom: 12px;">Our Vision</h3>
+            <p style="font-size: 18px; line-height: 1.7;">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris pretium condimentum tellus ut finibus. Nullam tortor est, vulputate at pulvinar vel, gravida vel mauris. Aliquam ultricies sed mauris eget convallis. Integer dictum vestibulum turpis et elementum.
+                <br><br>
+                Sed nibh nisi, laoreet eu varius nec, tempor ut tortor. Nam congue nisi ante, a accumsan massa bibendum et. Duis a sodales dui. Maecenas et purus facilisis, sollicitudin leo vitae, molestie leo.
+            </p>
+        </div>
+
+        <!-- Paragraph 2 -->
+        <div style="flex: 0 1 380px;">
+            <h3 style="font-size: 24px; margin-bottom: 12px;">What We Offer</h3>
+            <p style="font-size: 18px; line-height: 1.7;">
+                Curabitur vitae ligula sagittis massa elementum porta. Morbi vel odio et ipsum semper lacinia. Nulla placerat nisi rutrum nunc dapibus placerat. Cras mi neque, ultrices non sodales vitae, aliquet et turpis.
+                <br><br>
+                Phasellus convallis orci risus, non fermentum augue placerat eu. Aenean non arcu euismod, placerat lacus eget, mollis ipsum. Vestibulum gravida venenatis ex eu viverra. Pellentesque habitant morbi tristique senectus.
+            </p>
+        </div>
+
+        <!-- Paragraph 3 -->
+        <div style="flex: 0 1 380px;">
+            <h3 style="font-size: 24px; margin-bottom: 12px;">Our Mission</h3>
+            <p style="font-size: 18px; line-height: 1.7;">
+                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Phasellus blandit imperdiet mauris tincidunt convallis. Maecenas sem est, aliquet ac sem id, vestibulum mollis erat.
+                <br><br>
+                Nullam nec ex fermentum, venenatis ante ac, dignissim leo. Cras ac lobortis lacus, quis aliquam enim. Fusce convallis nunc lacus. Morbi porta dui eu augue mattis molestie.
+            </p>
+        </div>
+
+    </div>
+</div>
+<footer>
+    <div id="footer" style="
+    position: absolute;
+    top:1350px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 1525px;
+    padding: 10px;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width:1525px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+">
+<a>Copyright &#169 ModelMe 2025</a>
+
+    </div>
+</footer>
+
+{% endblock %}

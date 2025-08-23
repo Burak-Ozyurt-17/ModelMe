@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block title_name %}Error{% endblock %}
+{% block main %}
+    <div id="error-container">
+        <!--Cat error-->
+        <img alt="{{message}}" src="static/error.jpg">
+        <h1>{{message}}</h1>
+
+        <br>
+    </div>
+
+{% endblock %}

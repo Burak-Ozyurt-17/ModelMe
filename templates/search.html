@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block title_name %}Search Model{% endblock %}
+{% block main %}
+<form action="/search">
+    <div class="mb-3">
+        <input autofocus autocomplete="off" id="model-search" name="model" type="text" class="form-control form-control-lg"
+            placeholder="Search Model">
+        <button id="search" type="submit">Search</button>
+    </div>
+</form>
+
+<div id="result-container">
+    <ul class="model-list">
+        {% if models|length == 0 and args%}
+            <p style="text-align:center;color:#ccd0d2">No matches found.</p>
+        {% else %}
+            {% if args != none %}
+                <a style="position:absolute;left:15px;top:-40px;z-index:1;">{{ models | length }} results</a>
+            {% endif %}
+            {% for model in models %}
+                <a href="view/{{ model['model_id'] }}" style="text-decoration: none;">
+                    <li class="list-group-item">
+                        <div class="model-title">{{ model.title }}</div>
+                        <div class="model-meta">
+                            <span style="z-index:10"><strong>Description:</strong> {{ model.description }}</span><br>
+                            <span style="z-index:10"><strong>By:</strong> {{ model.username }}</span><br>
+                            <span style="position:absolute;padding:8x;right:5px;top:8px;background-color:#05a0e3;"class="badge badge-pill badge-primary">{{ model.category }}</span><br>
+                            <span style="position:absolute;padding:8px;right:5px;bottom:5px;">{{ model.timestamp[:10] }}</span>
+                        </div>
+                    </li>
+                </a>
+            {% endfor %}
+        {% endif %}
+    </ul>
+</div>
+
+{% endblock %}

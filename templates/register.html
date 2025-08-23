@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% block title_name %}Register{% endblock %}
+{% block main %}
+<style>
+  /* Make placeholder text light gray and fully visible */
+  input::placeholder {
+    color: #bbb;
+    opacity: 1;
+  }
+  /* Consistent background and text for inputs */
+  .form-control {
+    background-color: #2c2c2c;
+    color: #eee;
+    border-radius: 8px;
+    border: none;
+  }
+  .form-control:focus {
+    background-color: #3a3a3a;
+    color: #fff;
+    box-shadow: 0 0 5px #0d6efd;
+  }
+  /* Container to center vertically and horizontally */
+  .register-card {
+    position: absolute;
+    top: 20%;
+    background-color: #1f1f1f;
+    color: white;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.7);
+  }
+  /* Button styling */
+  .btn-primary {
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+  /* Link styling */
+  .login-link {
+    font-weight: 600;
+    color: #0d6efd;
+    text-decoration: none;
+  }
+  .login-link:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center min-vh-90">
+  <div class="register-card">
+    <h1 class="text-center mb-4" style="font-size: 2rem;">Register Account</h1>
+    <form action="/register" method="post" autocomplete="off">
+      <div class="mb-3">
+        <input autofocus name="username" type="text" class="form-control form-control-lg"
+               placeholder="Username" >
+      </div>
+      <div class="mb-3">
+        <input name="password" type="password" class="form-control form-control-lg"
+               placeholder="Password" >
+      </div>
+      <div class="mb-3">
+        <input name="confirmation" type="password" class="form-control form-control-lg"
+               placeholder="Confirm Password" >
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary btn-lg">Register</button>
+      </div>
+    </form>
+
+    <div class="text-center mt-4">
+      <p class="mb-0" style="font-weight: 500;">
+        Already have an account?
+        <a href="/login" class="login-link">Log In</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block title_name %}Preview Image{% endblock %}
+{% block main %}
+{% if file %}
+<img src="{{ url_for('static', filename='uploads/' + file.filename) }}" alt="Uploaded Image" style="max-width: 100%; max-height: 400px;">
+{% else %}
+    <p>No file uploaded.</p>
+{% endif %}
+{% endblock %}

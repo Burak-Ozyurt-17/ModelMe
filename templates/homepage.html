@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+{% block title_name %}Homepage{% endblock %}
+{% block main %}
+
+<div class="container">
+    <!-- Projects Section -->
+    <div class="projects-section">
+        <h1 class="section-title">My Projects</h1>
+        <div class="projects-grid">
+            <!-- New Project Button -->
+            <div class="new-project-card" id="newproject">
+                <a style="font-size: 32px">+</a> New Project
+            </div>
+
+            <!-- User Projects Loop -->
+            {% for model in models %}
+            <div class="project-card" onclick="window.location.href='/model/{{ model['model_id'] }}';" style="cursor: pointer;">
+                <div class="project-title">{{ model.title }}</div>
+                
+                <form method="POST" action="/delete/{{ model['model_id'] }}" onclick="event.stopPropagation();">
+                    <button type="submit" class="delete-icon">
+                        <img class="normal" src="{{ url_for('static', filename='trash.png') }}" alt="Delete">
+
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+
+        <a class="tutorial-link" id="tutorial">Learn How to use ModelMe</a>
+    </div>
+
+    <!-- Templates Section -->
+    <div class="templates-section">
+        <h2 class="section-title">Templates</h2>
+
+        <div class="templates-grid">
+            {% for example in examples %}
+            <a href="/example/{{ example['model_hash'] }}" style="text-decoration: none;">
+                <div class="template-card" style="background-color: {{ example.color }};">
+                    <div class="project-title">{{ example.title }}</div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- New Project Modal -->
+<div class="modal-overlay fade-in" id="newproject-filter" style="display:none;"></div>
+<div class="modal-card fade-in" id="newproject-card" style="display:none;">
+    <div class="modal-close" id="close-new">⛌</div>
+    <h2>Name Your Project</h2>
+    <form action="/train" method="post">
+        <input autofocus autocomplete="off" type="text" name="projectname" placeholder="Enter project name" required class="form-control">
+        <button type="submit" class="btn btn-success">Create Project</button>
+    </form>
+</div>
+
+<!-- Tutorial Modal -->
+<div class="modal-overlay fade-in" id="tutorial-filter" style="display:none;"></div>
+<div class="modal-card fade-in" id="tutorial-card" style="display:none;">
+    <div class="modal-close" id="close">⛌</div>
+    <h2>Getting Started with ModelMe</h2>
+    <p>ModelMe helps you create and test your own AI models using images. Here's how to begin:</p>
+    <ol>
+        <li>Click <strong>"New Project"</strong> to create a custom model.</li>
+        <li>Add training data by uploading images.</li>
+        <li>Train the model and test it live in your browser.</li>
+        <li>You can either publish it or keep it private</li>
+    </ol>
+    <p>Check the Templates section below for pre-trained examples you can explore</p>
+</div>
+<div class="container">
+  <div class="templates-section">
+    <h2 class="section-title">Published Models</h2>
+    <div class="templates-grid">
+    {% if published_models|length != 0 %}
+        {% for model in published_models %}
+            <a href="/model/{{ model['model_id'] }}" style="text-decoration: none;">
+                <div class="template-card">
+                <div class="project-title">{{ model.title }}</div>
+                    <div class="model-category">
+                        <span style="position:absolute;padding:8px;left:5px;top:5px;background-color:#05a0e3;"class="badge badge-pill badge-primary">{{model.category}}</span>
+                    </div>
+                    <form method="POST" action="/delete/{{ model['model_id'] }}" onclick="event.stopPropagation();">
+                        <button type="submit" class="delete-icon">
+                            <img class="normal" src="{{ url_for('static', filename='trash.png') }}" alt="Delete">
+                        </button>
+                    </form>
+                </div>
+            </a>
+        {% endfor %}
+    {% else %}
+    You haven't published any models yet
+    <br><br><br>
+    {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+    // Tutorial modal functionality
+    const tutorial = document.getElementById("tutorial");
+    const tutorialCard = document.getElementById("tutorial-card");
+    const tutorialFilter = document.getElementById("tutorial-filter");
+    const tutorialClose = document.getElementById("close");
+
+    tutorial.addEventListener('click', function () {
+        tutorialCard.style.display = "block";
+        tutorialFilter.style.display = "block";
+    });
+
+    tutorialClose.addEventListener('click', function () {
+        tutorialCard.style.display = "none";
+        tutorialFilter.style.display = "none";
+    });
+
+    // New project modal functionality
+    const newProjectBtn = document.getElementById("newproject");
+    const newProjectCard = document.getElementById("newproject-card");
+    const newProjectFilter = document.getElementById("newproject-filter");
+    const newProjectClose = document.getElementById("close-new");
+
+    newProjectBtn.addEventListener('click', function () {
+        newProjectCard.style.display = "block";
+        newProjectFilter.style.display = "block";
+    });
+
+    newProjectClose.addEventListener('click', function () {
+        newProjectCard.style.display = "none";
+        newProjectFilter.style.display = "none";
+    });
+
+    // Close modals when clicking on overlay
+    tutorialFilter.addEventListener('click', function () {
+        tutorialCard.style.display = "none";
+        tutorialFilter.style.display = "none";
+    });
+
+    newProjectFilter.addEventListener('click', function () {
+        newProjectCard.style.display = "none";
+        newProjectFilter.style.display = "none";
+    });
+</script>
+
+{% endblock %}
