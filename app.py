@@ -1,7 +1,6 @@
-import sqlite3, os, secrets, shutil, time,json
-
+import sqlite3, os, secrets, shutil, time, json
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, session,jsonify,send_file
+from flask import Flask, render_template, request, redirect, session, jsonify, send_file
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -13,8 +12,12 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+# 🔑 DB path fix
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "database.db")
 
-CATEGORIES = ["Image Classification",
+CATEGORIES = [
+    "Image Classification",
     "Object Detection",
     "Semantic Segmentation",
     "Pose Estimation",
@@ -22,27 +25,29 @@ CATEGORIES = ["Image Classification",
     "Style Transfer",
     "Background Removal",
     "Face Recognition",
-    "Custom Vision Task"
+    "Custom Vision Task",
 ]
+
+def get_db():
+    """Helper to connect to the right database every time"""
+    con = sqlite3.connect(DB_PATH)
+    con.row_factory = sqlite3.Row
+    return con
 
 @app.after_request
 def after_request(response):
-    """Ensure responses aren't cached"""
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
 
-
 @app.errorhandler(404)
 def not_found(e):
     return render_template("404.html")
 
-
 @app.errorhandler(500)
 def not_found(e):
     return render_template("500.html")
-
 
 @app.errorhandler(405)
 def not_found(e):
@@ -55,8 +60,7 @@ def index():
 @app.route("/homepage")
 @login_required
 def homepage():
-    with sqlite3.connect("database.db") as con:
-        con.row_factory = sqlite3.Row
+    with get_db() as con:
         db = con.cursor()
         examples = db.execute("SELECT title, color,model_hash FROM examples ORDER BY model_id").fetchall()
         models = db.execute(
@@ -67,8 +71,7 @@ def homepage():
             "SELECT * FROM published_models WHERE user_id = ?",
             (session.get("user_id"),)
         ).fetchall()
-    return render_template("homepage.html", examples=examples, models=models,published_models=published_models)
-
+    return render_template("homepage.html", examples=examples, models=models, published_models=published_models)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -77,7 +80,7 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
-        
+
         if not username:
             return error("Missing Username")
         elif not password:
@@ -87,11 +90,8 @@ def register():
         elif confirmation != password:
             return error("Unmatching Password Confirmation")
 
-        with sqlite3.connect("database.db") as con:
-            con.row_factory = sqlite3.Row
+        with get_db() as con:
             db = con.cursor()
-            
-            # Fixed: Properly check if username exists
             existing_user = db.execute("SELECT username FROM users WHERE username = ?", (username,)).fetchone()
             if existing_user:
                 return error("Username has already been taken")
@@ -100,16 +100,15 @@ def register():
                 db.execute("INSERT INTO users (username,hash) VALUES(?,?)",
                            (username, generate_password_hash(password)))
                 con.commit()
-                
+
                 user = db.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchone()
                 session["user_id"] = user["id"]
-                
+
             except sqlite3.IntegrityError:
                 return error("Username has already been taken")
 
         return redirect("/homepage")
     return render_template("register.html")
-
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -119,11 +118,9 @@ def login():
             return error("Missing Username")
         elif not request.form.get("password"):
             return error("Missing Password")
-            
-        with sqlite3.connect("database.db") as con:
-            con.row_factory = sqlite3.Row
-            db = con.cursor()
 
+        with get_db() as con:
+            db = con.cursor()
             row = db.execute(
                 "SELECT * FROM users WHERE username = ?",
                 (request.form.get("username"),)
@@ -131,7 +128,7 @@ def login():
 
             if row is None or not check_password_hash(row["hash"], request.form.get("password")):
                 return error("Invalid username and/or password")
-                
+
             session["user_id"] = row["id"]
 
         return redirect("/homepage")
@@ -145,7 +142,7 @@ def logout():
 @app.route("/search")
 @login_required
 def search():
-    with sqlite3.connect("database.db") as con:
+    with get_db() as con:
         con.row_factory = sqlite3.Row
         db = con.cursor()
         search_term = request.args.get("model")
@@ -160,7 +157,7 @@ def search():
 @login_required
 def profile():
     user_id = session.get("user_id")
-    with sqlite3.connect("database.db") as con:
+    with get_db() as con:
         con.row_factory = sqlite3.Row
         db = con.cursor()
         row = db.execute(
@@ -198,7 +195,7 @@ def create_model(db, con, name, user_id):
 @app.route("/train", methods=["POST"])
 @login_required
 def train():
-    with sqlite3.connect("database.db") as con:
+    with get_db() as con:
         con.row_factory = sqlite3.Row
         db = con.cursor()
 
@@ -212,7 +209,7 @@ def train():
         return redirect("/homepage")
 
 def verify_model_ownership(model_id, user_id):
-    with sqlite3.connect("database.db") as con:
+    with get_db() as con:
         con.row_factory = sqlite3.Row
         db = con.cursor()
         model = db.execute(
@@ -224,7 +221,7 @@ def verify_model_ownership(model_id, user_id):
 @app.route("/model/<model_id>",methods=["POST","GET"])
 @login_required
 def view_model(model_id):
-    with sqlite3.connect("database.db") as con:
+    with get_db() as con:
         con.row_factory = sqlite3.Row
         db = con.cursor()
         model = db.execute(
@@ -255,7 +252,7 @@ def view_model(model_id):
 @app.route("/view/<model_id>")
 @login_required
 def only_view_model(model_id):
-    with sqlite3.connect("database.db") as con:
+    with get_db() as con:
         con.row_factory = sqlite3.Row
         db = con.cursor()
         model = db.execute(
@@ -279,7 +276,7 @@ def only_view_model(model_id):
 @app.route("/example/<model_hash>")
 @login_required
 def view_example(model_hash):
-    with sqlite3.connect("database.db") as con:
+    with get_db() as con:
         con.row_factory = sqlite3.Row
         db = con.cursor()
         example = db.execute(
@@ -296,7 +293,7 @@ def delete_model(model_id):
     if not verify_model_ownership(model_id, session.get("user_id")):
         return error("Unauthorized")
         
-    with sqlite3.connect("database.db") as con:
+    with get_db() as con:
         con.row_factory = sqlite3.Row
         db = con.cursor()
         db.execute(
@@ -326,7 +323,7 @@ def delete_model(model_id):
 def publish_model(model_id):
     if not verify_model_ownership(model_id, session.get("user_id")):
         return error("Unauthorized")
-    with sqlite3.connect("database.db") as con:
+    with get_db() as con:
         con.row_factory = sqlite3.Row
         db = con.cursor()
         db.execute(
@@ -339,7 +336,7 @@ def publish_model(model_id):
 @app.route("/add_class/<model_id>",methods=["POST"])
 @login_required
 def add_class(model_id):
-    with sqlite3.connect("database.db") as con:
+    with get_db() as con:
         if request.headers.get("Content-Type") != "application/json":
             error(404)
         con.row_factory = sqlite3.Row
@@ -356,7 +353,7 @@ def add_class(model_id):
 @app.route("/delete_class/<model_id>/<class_number>",methods=["POST","GET"])
 @login_required
 def delete_class(model_id,class_number):
-    with sqlite3.connect("database.db") as con:
+    with get_db() as con:
         con.row_factory = sqlite3.Row
         db = con.cursor()
         count = db.execute("SELECT COUNT(*) FROM classes WHERE model_id = ?",(model_id,)).fetchone()[0]
@@ -371,7 +368,7 @@ def delete_class(model_id,class_number):
 def rename_class(model_id,class_number,class_name):
     if not verify_model_ownership(model_id, session.get("user_id")):
         return error("Unauthorized")
-    with sqlite3.connect("database.db") as con:
+    with get_db() as con:
         con.row_factory = sqlite3.Row
         db = con.cursor()
         db.execute("UPDATE classes SET class_name = ? WHERE model_id = ? AND class_number = ?",
@@ -384,7 +381,7 @@ def save_model(model_id):
     os.makedirs(f"static/models/{model_id}", exist_ok=True)
     for f in request.files.values():
         f.save(os.path.join(f"static/models/{model_id}", f.filename))
-    with sqlite3.connect("database.db") as con:
+    with get_db() as con:
         db=con.cursor()
         db.execute("UPDATE models SET trained = 1 WHERE model_id = ?",(model_id,))
         con.commit()
@@ -424,3 +421,4 @@ def get_class_names(model_id):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
