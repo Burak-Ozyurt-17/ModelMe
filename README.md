@@ -4,8 +4,7 @@
 
 
 
-![Logo](https://i.ibb.co/WNKFjhZm/Ads-z-tasar-m-2.png)
-
+![Logo](logo.png)
 
 ## Table of Contents
 - [About ModelMe](#about-modelme)
