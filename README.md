@@ -76,7 +76,7 @@ Setting up ModelMe locally is simple. The following steps assume that Python 3.9
 
        ![App Screenshot](screenshot1.png)
 
-       ![App Screenshot](https://i.ibb.co/BHNmcw1W/Screenshot-2025-08-23-135117.png)
+       ![App Screenshot](screenshot2.png)
 
 
      ### Inspiration
