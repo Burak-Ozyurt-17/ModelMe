@@ -4,7 +4,7 @@
 
 
 
-![Logo](logo.png)
+![Logo](screenshots/logo.png)
 
 ## Table of Contents
 - [About ModelMe](#about-modelme)
@@ -73,9 +73,9 @@ Setting up ModelMe locally is simple. The following steps assume that Python 3.9
 
        ## Screenshots
 
-       ![App Screenshot](screenshot1.png)
+       ![App Screenshot](screenshots/screenshot1.png)
 
-       ![App Screenshot](screenshot2.png)
+       ![App Screenshot](screenshots/screenshot2.png)
 
 
      ### Inspiration
